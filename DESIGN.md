@@ -1,6 +1,6 @@
 # Phase 10 Tracker — design notes
 
-Last updated: 19 Oct 2026 (v5, on test branch `m3`)
+Last updated: 19 Oct 2026 (v5)
 
 The full design doc (house rules, screens, milestones, lessons) is Stuart's Claude doc "Phase 10 Tracker — Design Doc":
 https://claude.ai/code/artifact/1d0d6d11-134c-4fba-97fd-f5ec57a9b50d
@@ -21,7 +21,7 @@ Live at: https://sgoodwin-cloud.github.io/phase10-tracker/
 |---|---|
 | 1. Phase tracker (setup, standings, record hand, winner, undo, saves, Rules & FAQ) | Built in v1 |
 | 2. Installable and offline (manifest, icons, service worker, update banner, Share button, install tip) | Built in v1; installed on Stuart's iPhone 13 |
-| 3. History and corrections (round grid, correct any round, dealer marked per round, rematch) | Built in v5 on branch `m3`; awaiting Stuart's play-test before merging to `main` |
+| 3. History and corrections (round grid, correct any round, dealer marked per round, rematch) | Built in v5; play-tested by Stuart and merged to `main` |
 | 4. Variants (first to N phases, even only, odd only) | Not started |
 | 5. Polish (winner moment, remembered names, stats, past results) | Not started |
 | 6. Optional points scoring | Parked; may never be built |
@@ -105,3 +105,4 @@ Live at: https://sgoodwin-cloud.github.io/phase10-tracker/
 | 19 Oct 2026 | v4: rules and FAQ checked against the leaflet in Stuart's deck (2025 Mattel edition), which is now the rules source. Skip cards follow that edition (placed in front of the skipped player; no skipping someone who already has one). Removed the FAQ claiming you may hold back a phase you can lay down. House rule added: shuffle the discard pile into a new draw pile if it runs out. Deck is 112 cards including 4 reference cards. "Round" used throughout instead of "hand" |
 | 19 Oct 2026 | Even/odd-phases-only variants aren't in Stuart's leaflet (it lists 10 rounds where everyone advances, and play to a set number of phases); Milestone 4 variants to be confirmed |
 | 19 Oct 2026 | Milestone 3 (v5): History grid with tap-to-correct, dealer per round, extra-round tidy-up after corrections. Standings buttons become History / Undo round / New game. Save format unchanged (`SAVE_VERSION` 1). On test branch `m3` with a preview link; merge after play-test |
+| 19 Oct 2026 | Milestone 3 approved after preview testing; `m3` merged to `main` |
