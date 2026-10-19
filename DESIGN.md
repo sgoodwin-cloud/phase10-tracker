@@ -1,6 +1,6 @@
 # Phase 10 Tracker — design notes
 
-Last updated: 19 Oct 2026 (v3)
+Last updated: 19 Oct 2026 (v4)
 
 The full design doc (house rules, screens, milestones, lessons) is Stuart's Claude doc "Phase 10 Tracker — Design Doc":
 https://claude.ai/code/artifact/1d0d6d11-134c-4fba-97fd-f5ec57a9b50d
@@ -97,7 +97,9 @@ Live at: https://sgoodwin-cloud.github.io/phase10-tracker/
 | 19 Oct 2026 | Styled with Stuart's Run & Set design system, navy theme only; Jost bundled for offline |
 | 19 Oct 2026 | Rules & FAQ button and Share button carried over from Flip 7, both in v1 |
 | 19 Oct 2026 | Milestones 1 and 2 shipped together as v1, straight to `main` as nothing was installed yet |
-| 19 Oct 2026 | Standings sorted by progress (seat order breaks ties); Record hand lists players in seat order |
+| 19 Oct 2026 | Standings sorted by progress (seat order breaks ties); Record round lists players in seat order |
 | 19 Oct 2026 | Saving a hand where nobody made their phase asks for confirmation rather than blocking it |
-| 19 Oct 2026 | v2: compact phone layout so six players, Record hand and Undo fit on an iPhone 13 without scrolling; standings stripe moved to the foot of the screen. Pushed straight to `main` as a fix to v1 |
+| 19 Oct 2026 | v2: compact phone layout so six players, Record round and Undo fit on an iPhone 13 without scrolling; standings stripe moved to the foot of the screen. Pushed straight to `main` as a fix to v1 |
 | 19 Oct 2026 | v3: the reference card in Stuart's deck is the canonical phase list. Only Phase 10 changed: 1 set of 5 + 1 set of 3 (the website's older list says a set of 4). Variants build on top of this list |
+| 19 Oct 2026 | v4: rules and FAQ checked against the leaflet in Stuart's deck (2025 Mattel edition), which is now the rules source. Skip cards follow that edition (placed in front of the skipped player; no skipping someone who already has one). Removed the FAQ claiming you may hold back a phase you can lay down. House rule added: shuffle the discard pile into a new draw pile if it runs out. Deck is 112 cards including 4 reference cards. "Round" used throughout instead of "hand" |
+| 19 Oct 2026 | Even/odd-phases-only variants aren't in Stuart's leaflet (it lists 10 rounds where everyone advances, and play to a set number of phases); Milestone 4 variants to be confirmed |

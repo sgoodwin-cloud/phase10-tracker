@@ -269,13 +269,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   <!-- STANDINGS -->
   <section class="screen" id="scrBoard" hidden>
     <div class="bar">
-      <h1 class="headline" id="handTitle">Hand 1</h1>
+      <h1 class="headline" id="handTitle">Round 1</h1>
       <span class="rs-badge rs-badge-white" id="dealerBadge"></span>
     </div>
     <div class="stack" id="playerList"></div>
-    <button class="rs-btn rs-btn-primary rs-btn-block" id="recordBtn" type="button">Record hand 1</button>
+    <button class="rs-btn rs-btn-primary rs-btn-block" id="recordBtn" type="button">Record round 1</button>
     <div class="btn-row">
-      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="undoBtn" type="button">Undo last hand</button>
+      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="undoBtn" type="button">Undo last round</button>
       <button class="rs-btn rs-btn-ghost rs-btn-sm" id="newGameBtn" type="button">New game</button>
     </div>
     <div class="stripe-foot" aria-hidden="true"><div class="rs-stripes"><i class="rs-s rs-s-red"></i><i class="rs-s rs-s-blue"></i><i class="rs-s rs-s-green"></i><i class="rs-s rs-s-yellow"></i></div></div>
@@ -284,13 +284,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   <!-- RECORD HAND -->
   <section class="screen" id="scrRecord" hidden>
     <div class="bar">
-      <h1 class="headline" id="recordTitle">Hand 1</h1>
+      <h1 class="headline" id="recordTitle">Round 1</h1>
       <span class="rs-badge rs-badge-yellow" id="recordCount">0 made it</span>
     </div>
-    <p class="lead">Tap everyone who laid down their phase this hand.</p>
+    <p class="lead">Tap everyone who laid down their phase this round.</p>
     <div class="stack" id="markList"></div>
     <p class="warn" id="recordWarn" role="status"></p>
-    <button class="rs-btn rs-btn-primary rs-btn-block" id="saveHandBtn" type="button">Save hand</button>
+    <button class="rs-btn rs-btn-primary rs-btn-block" id="saveHandBtn" type="button">Save round</button>
     <button class="rs-btn rs-btn-ghost rs-btn-sm rs-btn-block" id="cancelHandBtn" type="button">Cancel</button>
   </section>
 
@@ -316,7 +316,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <button class="rs-btn rs-btn-primary" id="rematchBtn" type="button">Rematch</button>
       <button class="rs-btn rs-btn-secondary" id="freshBtn" type="button">New players</button>
     </div>
-    <button class="rs-btn rs-btn-ghost rs-btn-sm rs-btn-block" id="winUndoBtn" type="button">Undo last hand</button>
+    <button class="rs-btn rs-btn-ghost rs-btn-sm rs-btn-block" id="winUndoBtn" type="button">Undo last round</button>
   </section>
 
   <!-- RULES & FAQ -->
@@ -377,7 +377,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '3';
+  const APP_VERSION = '4';
   const SAVE_KEY = 'phase10-tracker';
   const SAVE_VERSION = 1;
   const MIN_PLAYERS = 2, MAX_PLAYERS = 6;
@@ -467,7 +467,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
   function renderBoard() {
     const g = state.game, n = g.hands.length + 1;
-    $('handTitle').textContent = 'Hand ' + n;
+    $('handTitle').textContent = 'Round ' + n;
     $('dealerBadge').textContent = 'Deal: ' + dealerFor(g, g.hands.length).name;
     const r = ranked(g), top = r[0].done;
     $('playerList').innerHTML = r.map((p) => {
@@ -478,13 +478,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
         '<div class="player__name"><span>' + esc(p.name) + '</span>' + (lead ? '<span class="rs-badge rs-badge-yellow">Leading</span>' : '') + '</div>' +
         '<div class="player__req">' + PHASES[ph] + '</div></div>';
     }).join('');
-    $('recordBtn').textContent = 'Record hand ' + n;
+    $('recordBtn').textContent = 'Record round ' + n;
     $('undoBtn').disabled = !g.hands.length;
   }
 
   function renderRecord() {
     const g = state.game;
-    $('recordTitle').textContent = 'Hand ' + (g.hands.length + 1);
+    $('recordTitle').textContent = 'Round ' + (g.hands.length + 1);
     $('markList').innerHTML = g.players.map((p) => {
       const ph = currentPhase(g, p.id), on = marked.has(p.id);
       return '<button type="button" class="mark" data-mark="' + p.id + '" aria-pressed="' + on + '">' + tile(ph) +
@@ -501,7 +501,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     const names = chosen ? [chosen.name] : f.map((p) => p.name);
     $('winLabel').textContent = shared ? 'Shared win' : 'Winner';
     $('winNames').textContent = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0] || '';
-    $('winSub').textContent = (shared ? 'All finished Phase 10' : 'Finished Phase 10 first') + ', after ' + plural(g.hands.length, 'hand') + '.';
+    $('winSub').textContent = (shared ? 'All finished Phase 10' : 'Finished Phase 10 first') + ', after ' + plural(g.hands.length, 'round') + '.';
     $('tieTools').hidden = f.length < 2;
     $('pickOneBtn').hidden = !!chosen || picking;
     $('pickWrap').hidden = !picking || !!chosen;
@@ -570,14 +570,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
   $('saveHandBtn').addEventListener('click', () => {
     if (marked.size) return commitHand();
-    confirmThen('Nobody made their phase?', 'Usually whoever went out has laid down their phase. Save this hand with everyone staying on the same phase?', 'Save hand', 'Go back', commitHand);
+    confirmThen('Nobody made their phase?', 'Usually whoever went out has laid down their phase. Save this round with everyone staying on the same phase?', 'Save round', 'Go back', commitHand);
   });
 
   /* ---------- Undo ---------- */
   function undoLastHand() {
     const g = state.game; if (!g || !g.hands.length) return;
     const n = g.hands.length;
-    confirmThen('Undo hand ' + n + '?', 'Everyone goes back to the phase they were on before hand ' + n + ' was saved.', 'Undo hand', 'Cancel', () => {
+    confirmThen('Undo round ' + n + '?', 'Everyone goes back to the phase they were on before round ' + n + ' was saved.', 'Undo round', 'Cancel', () => {
       g.hands.pop(); g.winner = null; picking = false;
       state.screen = 'board'; save(); go();
     });
@@ -621,7 +621,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   const house = (text) => '<p class="house"><span class="label">House rule</span>' + text + '</p>';
 
   $('panePhases').innerHTML =
-    '<p>Work through the phases in order, one per hand at most. Your phase number shows on your card in the standings.</p>' +
+    '<p>Work through the phases in order, one per round at most. Your phase number shows on your card in the standings.</p>' +
     '<ol class="rs-phases phase-ref">' + STANDARD.map((n) =>
       '<li class="rs-phase"><span class="rs-phase-n suit-' + suit(n) + '">' + n + '</span><span class="rs-phase-t">' + PHASES[n] + '</span></li>').join('') + '</ol>' +
     sec('Sets, runs and colours', '<ul><li>A <b>set</b> is cards of the same number, in any colours. Two sets in one phase can be the same number.</li>' +
@@ -630,44 +630,47 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
   $('paneRules').innerHTML =
     sec('The aim', '<p>Be the first to complete all ten phases.</p>' +
-      house('We don’t count points. The first player to complete Phase 10 wins. If two or more players complete it in the same hand, it’s a shared win.')) +
-    sec('The deck', '<p>108 cards: numbers 1 to 12 in red, blue, green and yellow, two of each per colour (96 cards), plus 8 Wild cards and 4 Skip cards.</p>') +
-    sec('Setting up', '<ul><li>For 2 to 6 players. The dealer deals everyone 10 cards, face down, one at a time.</li>' +
+      house('We don’t count points. The first player to complete Phase 10 wins. If two or more players complete it in the same round, it’s a shared win.')) +
+    sec('The deck', '<p>112 cards: 108 to play with and 4 Phase Reference cards. The 108 are numbers 1 to 12 in red, blue, green and yellow, two of each per colour (96 cards), plus 8 Wild cards and 4 Skip cards.</p>') +
+    sec('Setting up', '<ul><li>For 2 to 6 players. The dealer puts the Phase Reference cards where everyone can see them.</li>' +
+      '<li>The dealer shuffles and deals everyone 10 cards, face down.</li>' +
       '<li>The rest of the deck goes face down as the draw pile. Turn its top card over to start the discard pile.</li>' +
       '<li>The player on the dealer’s left goes first, then play passes clockwise.</li></ul>') +
-    sec('Your turn', '<ul><li><b>Draw</b> one card, from the top of either the draw pile or the discard pile.</li>' +
-      '<li>If you can, <b>lay down your phase</b> and then <b>hit</b> (see below).</li>' +
+    sec('Your turn', '<p>Every turn has four steps:</p><ul><li><b>Draw</b> one card, from the top of either the draw pile or the discard pile.</li>' +
+      '<li><b>Lay down your phase</b>, if you can.</li>' +
+      '<li><b>Hit</b>: play cards onto phases already laid down, if you can.</li>' +
       '<li><b>Discard</b> one card to end your turn.</li></ul>' +
-      '<p>If the draw pile runs out, turn over the discard pile to make a new one.</p>') +
+      house('If the draw pile runs out, shuffle the discard pile and turn it face down as the new draw pile.')) +
     sec('Laying down your phase', '<ul><li>You need the whole phase in your hand before you put it down, face up in front of you.</li>' +
-      '<li>You can add extra cards to it as you lay it down, but only if they fit the groups you’re making.</li>' +
-      '<li>You only need to lay it down to move on. You don’t have to win the hand.</li>' +
-      '<li>Only one phase per hand. If you miss it, you try the same phase again next hand.</li></ul>') +
+      '<li>You only need to lay it down to move on. You don’t have to win the round.</li>' +
+      '<li>Only one phase per round. If you miss it, you try the same phase again next round.</li>' +
+      '<li>Phases go in order, 1 to 10.</li></ul>') +
     sec('Wild cards', '<ul><li>A Wild stands in for any number and any colour.</li>' +
-      '<li>You can use as many Wilds as you like, as long as there’s at least one real number card in the phase.</li>' +
-      '<li>Once a Wild is down, it stays as the card it replaced until the end of the hand.</li>' +
-      '<li>If the first card turned up for the discard pile is a Wild, the first player may take it.</li></ul>') +
-    sec('Skip cards', '<ul><li>Discard a Skip and choose a player to miss their next turn.</li>' +
+      '<li>You can use as many Wilds as you like, as long as there’s at least one number card in the phase.</li>' +
+      '<li>Once a Wild is down in a phase, it can’t be taken back out for the rest of the round.</li>' +
+      '<li>If the first card turned up for the discard pile is a Wild, the first player may pick it up.</li></ul>') +
+    sec('Skip cards', '<ul><li>To skip a player, put your Skip face up in front of them instead of on the discard pile. That counts as your discard and ends your turn.</li>' +
+      '<li>On their next turn, all the skipped player does is move the Skip to the discard pile. Then play moves on.</li>' +
+      '<li>You can’t skip someone who already has a Skip in front of them.</li>' +
       '<li>Skips can’t be used in a phase, and can’t be picked up from the discard pile.</li>' +
-      '<li>Each player can only be skipped once per trip round the table.</li>' +
-      '<li>If the first card turned up for the discard pile is a Skip, the first player misses their turn.</li></ul>') +
-    sec('Hitting', '<p>Once your phase is down, you can get rid of cards on your turn by adding them to any phase on the table, yours or someone else’s, as long as they fit: another 4 on a set of 4s, the next number on either end of a run, or a matching colour on Phase 8.</p>') +
-    sec('Going out and the next hand', '<p>The hand ends when someone gets rid of all their cards, by hitting and discarding. Everyone who laid down their phase moves on to the next one. Everyone else tries the same phase again. The deal passes to the left, and the cards are shuffled for the next hand.</p>' +
-      house('This app records who made their phase each hand. The official rules also score the cards left in players’ hands; we don’t.')) +
-    sec('Winning', '<p>The game ends after the hand in which someone completes Phase 10.</p>' +
-      house('If more than one player completes Phase 10 in that hand, they share the win. The app offers “Pick one winner” too, for when the table wants to settle it.'));
+      '<li>If the first card turned up for the discard pile is a Skip, the first player misses their first turn.</li></ul>') +
+    sec('Hitting', '<p>Once your phase is down, you can get rid of cards on your turn by adding them to any phase on the table, yours or someone else’s, as long as they fit: another 4 on a set of 4s, the next number on either end of a run, or a matching colour on Phase 8. A Wild fits anywhere. You can make as many hits as you like, on as many phases as you like.</p>') +
+    sec('Going out and the next round', '<p>You go out by getting rid of your last card, by hitting, discarding, or both. That ends the round for everyone. Everyone who laid down their phase moves on to the next one; everyone else tries the same phase again. The player on the dealer’s left deals next, with all the cards shuffled.</p>' +
+      house('This app records who made their phase each round. The official rules also score the cards left in players’ hands; we don’t.')) +
+    sec('Winning', '<p>The game ends after the round in which someone completes Phase 10.</p>' +
+      house('If more than one player completes Phase 10 in that round, they share the win. The app offers “Pick one winner” too, for when the table wants to settle it.'));
 
   const FAQ = [
-    ['Do I have to win the hand to move on to the next phase?', 'No. Laying your phase down is enough. Often several players complete their phase in the same hand.'],
-    ['Can I make two phases in one hand?', 'No. Even a run of 9 on Phase 4 only completes Phase 4.'],
-    ['Can I lay down more cards than my phase needs?', 'Yes, but only extra cards that fit what you’re laying down, like a fourth 7 on your set of three 7s. You can’t add a whole extra set.'],
+    ['Do I have to win the round to move on to the next phase?', 'No. Laying your phase down is enough. Often several players complete their phase in the same round.'],
+    ['Can I make two phases in one round?', 'No. Even a run of 9 on Phase 4 only completes Phase 4.'],
+    ['Can I add extra cards to my phase?', 'Yes, by hitting. Once your phase is down you can add cards that fit straight away, in the same turn, like a fourth 7 on your set of 7s. You can’t lay down a whole extra set.'],
     ['Can I hit before I’ve laid down my own phase?', 'No. Your phase has to be down first. After that you can hit on any phase, on your own turn.'],
-    ['How many Wild cards can I use in a phase?', 'As many as you like, as long as at least one real number card is in there too.'],
-    ['Can I swap a Wild in my phase for the real card later?', 'No. A Wild stays put until the end of the hand.'],
+    ['How many Wild cards can I use in a phase?', 'As many as you like, as long as at least one number card is in there too.'],
+    ['Can I swap a Wild in my phase for the real card later?', 'No. A Wild stays put until the end of the round.'],
+    ['Can I skip someone who’s already been skipped?', 'Not while a Skip is still in front of them. Once they’ve moved it to the discard pile, they can be skipped again.'],
     ['Can I pick up a Skip from the discard pile?', 'No, and a Skip can never be part of a phase.'],
-    ['Do I have to lay my phase down as soon as I can?', 'No. You can wait, but if someone goes out first you’ll be trying the same phase again next hand.'],
     ['Can both sets in Phase 1 be the same number?', 'Yes. Three 10s and another three 10s is fine.'],
-    ['What happens if two people complete Phase 10 in the same hand?', 'House rule: it’s a shared win. The official rules break the tie on points, but we don’t count them.']
+    ['What happens if two people complete Phase 10 in the same round?', 'House rule: it’s a shared win. The official rules break the tie on points, but we don’t count them.']
   ];
   $('paneFaq').innerHTML = FAQ.map(([q, a]) => '<div class="faq"><h4>' + esc(q) + '</h4><p>' + esc(a) + '</p></div>').join('');
 
