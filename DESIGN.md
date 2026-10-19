@@ -1,6 +1,6 @@
 # Phase 10 Tracker — design notes
 
-Last updated: 19 Oct 2026 (v1)
+Last updated: 19 Oct 2026 (v2)
 
 The full design doc (house rules, screens, milestones, lessons) is Stuart's Claude doc "Phase 10 Tracker — Design Doc":
 https://claude.ai/code/artifact/1d0d6d11-134c-4fba-97fd-f5ec57a9b50d
@@ -20,7 +20,7 @@ Live at: https://sgoodwin-cloud.github.io/phase10-tracker/
 | Milestone | Status |
 |---|---|
 | 1. Phase tracker (setup, standings, record hand, winner, undo, saves, Rules & FAQ) | Built in v1 |
-| 2. Installable and offline (manifest, icons, service worker, update banner, Share button, install tip) | Built in v1; pending first install on Stuart's phone |
+| 2. Installable and offline (manifest, icons, service worker, update banner, Share button, install tip) | Built in v1; installed on Stuart's iPhone 13 |
 | 3. History and corrections (hand grid, edit any hand, dealer marker refinements, rematch) | Not started (dealer badge and Rematch already in v1) |
 | 4. Variants (first to N phases, even only, odd only) | Not started |
 | 5. Polish (winner moment, remembered names, stats, past results) | Not started |
@@ -99,3 +99,4 @@ Live at: https://sgoodwin-cloud.github.io/phase10-tracker/
 | 19 Oct 2026 | Milestones 1 and 2 shipped together as v1, straight to `main` as nothing was installed yet |
 | 19 Oct 2026 | Standings sorted by progress (seat order breaks ties); Record hand lists players in seat order |
 | 19 Oct 2026 | Saving a hand where nobody made their phase asks for confirmation rather than blocking it |
+| 19 Oct 2026 | v2: compact phone layout so six players, Record hand and Undo fit on an iPhone 13 without scrolling; standings stripe moved to the foot of the screen. Pushed straight to `main` as a fix to v1 |

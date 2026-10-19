@@ -199,7 +199,44 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 /* Update banner */
 #update { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); white-space: nowrap; box-shadow: var(--shadow-lift); }
-@media (max-width: 370px) { .brand { font-size: 19px; } .tile { width: 56px; } .rs-btn-sm { padding-inline: 10px; } }
+/* Phone layout (v2): sized so six players, Record hand and Undo fit on an iPhone 13 (390 × 844) without scrolling. */
+.wrap { padding-bottom: var(--space-4); }
+.screen { gap: var(--space-3); }
+.stack { gap: var(--space-2); }
+.top { padding-block: var(--space-2); margin-bottom: var(--space-3); }
+.brand { font-size: 20px; line-height: 24px; }
+.brand small { font-size: 11px; line-height: 14px; }
+.top-actions .rs-btn-sm { min-height: 36px; font-size: 14px; padding: 6px 10px; }
+.headline { font-size: 26px; line-height: 30px; }
+.rs-btn { min-height: 48px; font-size: 17px; padding: 10px var(--space-4); }
+.rs-btn-sm { min-height: 40px; font-size: 15px; }
+.rs-badge { font-size: 12px; padding: 3px 10px; }
+/* Standings rows */
+.player { gap: 0 var(--space-3); padding: 6px var(--space-3) 6px 6px; border-radius: var(--radius-card); }
+.player.is-lead { box-shadow: 0 0 0 1px var(--yellow), var(--shadow-card); }
+.tile { width: 46px; height: 52px; border-radius: 8px; box-shadow: inset 0 0 0 2px #ffffff33; }
+.tile b { font-size: 30px; }
+.tile small { font-size: 8px; line-height: 9px; margin-top: 1px; }
+.player__name { font-size: 18px; line-height: 22px; }
+.player__name .rs-badge { font-size: 10px; line-height: 12px; padding: 2px 8px; }
+.player__req { font-size: 15px; line-height: 20px; }
+/* Record hand rows */
+.mark { gap: var(--space-3); padding: 6px var(--space-3) 6px 6px; border-radius: var(--radius-card); }
+.mark .tile { width: 46px; height: 52px; }
+.mark .tile b { font-size: 30px; }
+.mark__name { font-size: 18px; line-height: 22px; }
+.mark__state { font-size: 12px; padding: 5px 9px; }
+/* The stripe bleeds off the foot of the standings and the top of the winner screen */
+.stripe-foot { margin: var(--space-2) calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0; padding-top: 56px; overflow: hidden; }
+.stripe-foot .rs-stripes, .stripe-top .rs-stripes { --stripe-band: 7px; --stripe-gap: 3px; }
+.stripe-top { margin-top: 0; padding-top: 4px; }
+/* Winner */
+.rs-panel { padding: var(--space-4); }
+.win-names { font-size: 34px; line-height: 38px; }
+.final-row { padding: 6px var(--space-2); }
+.final-row .rs-phase-n { width: 32px; height: 32px; font-size: 15px; }
+.ver { margin-top: var(--space-2); }
+@media (max-width: 370px) { .brand { font-size: 18px; } .brand small { display: none; } .top-actions .rs-btn-sm { padding-inline: 8px; } }
 @media (prefers-reduced-motion: reduce) { .rs-btn, .mark { transition: none; } }
 </style>
 </head>
@@ -231,7 +268,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
   <!-- STANDINGS -->
   <section class="screen" id="scrBoard" hidden>
-    <div class="stripe-top" aria-hidden="true"><div class="rs-stripes"><i class="rs-s rs-s-red"></i><i class="rs-s rs-s-blue"></i><i class="rs-s rs-s-green"></i><i class="rs-s rs-s-yellow"></i></div></div>
     <div class="bar">
       <h1 class="headline" id="handTitle">Hand 1</h1>
       <span class="rs-badge rs-badge-white" id="dealerBadge"></span>
@@ -242,6 +278,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <button class="rs-btn rs-btn-ghost rs-btn-sm" id="undoBtn" type="button">Undo last hand</button>
       <button class="rs-btn rs-btn-ghost rs-btn-sm" id="newGameBtn" type="button">New game</button>
     </div>
+    <div class="stripe-foot" aria-hidden="true"><div class="rs-stripes"><i class="rs-s rs-s-red"></i><i class="rs-s rs-s-blue"></i><i class="rs-s rs-s-green"></i><i class="rs-s rs-s-yellow"></i></div></div>
   </section>
 
   <!-- RECORD HAND -->
@@ -340,7 +377,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '1';
+  const APP_VERSION = '2';
   const SAVE_KEY = 'phase10-tracker';
   const SAVE_VERSION = 1;
   const MIN_PLAYERS = 2, MAX_PLAYERS = 6;
