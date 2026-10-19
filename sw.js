@@ -1,5 +1,5 @@
 // Bump VERSION whenever the app changes (together with APP_VERSION in index.html), so phones pick up the new copy.
-const VERSION = 'phase10-tracker-v4';
+const VERSION = 'phase10-tracker-v5';
 // Every file the app needs offline. Add any new file here.
 const CORE = [
   './', './index.html', './manifest.webmanifest',

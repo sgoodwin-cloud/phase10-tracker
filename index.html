@@ -236,6 +236,31 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .final-row { padding: 6px var(--space-2); }
 .final-row .rs-phase-n { width: 32px; height: 32px; font-size: 15px; }
 .ver { margin-top: var(--space-2); }
+/* History (Milestone 3) */
+.btn-row-3 { grid-template-columns: 1fr 1fr 1fr; gap: var(--space-2); }
+.btn-row-3 .rs-btn-sm { padding-inline: 6px; }
+.hist-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--surface-raised); }
+.hist { border-collapse: separate; border-spacing: 0; width: 100%; table-layout: fixed; }
+.hist th, .hist td { padding: 0; text-align: center; border-bottom: 1px solid var(--line); }
+.hist thead th { font-size: 13px; line-height: 16px; font-weight: 700; padding: 10px 2px 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-bottom: 2px solid var(--line-strong); }
+.hist .rcol { position: sticky; left: 0; z-index: 1; width: 44px; background: var(--surface-raised); font-size: 15px; font-weight: 700; color: var(--ink-muted); border-right: 1px solid var(--line); }
+.hist thead .rcol { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.hist tfoot th, .hist tfoot td { border-bottom: 0; border-top: 2px solid var(--line-strong); background: var(--surface-sunken); }
+.hcell { position: relative; width: 100%; height: 44px; border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+.hcell:active { background: var(--navy-deep); }
+.hcell:disabled { cursor: default; }
+.pip { min-width: 32px; height: 30px; padding: 0 4px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; }
+.pip-miss { box-shadow: inset 0 0 0 2px var(--line-strong); color: var(--ink-muted); font-weight: 600; }
+.pip-done { background: var(--card-face); color: var(--navy); }
+.pip-none { color: var(--ink-muted); font-weight: 600; }
+.pip i { font-style: normal; font-size: 12px; margin-left: 1px; }
+.pipwrap { position: relative; display: inline-flex; }
+.dl { position: absolute; top: -6px; right: -7px; font-size: 9px; line-height: 12px; font-weight: 800; padding: 0 3px; border-radius: 3px; background: var(--card-face); color: var(--navy); }
+.legend { margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-muted); display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); align-items: center; }
+.legend .pip { min-width: 24px; height: 20px; font-size: 12px; border-radius: 5px; vertical-align: middle; }
+.notice { margin: 0; background: var(--yellow); color: var(--on-yellow); border-radius: var(--radius-card); padding: var(--space-3) var(--space-4); font-weight: 600; display: flex; flex-direction: column; gap: var(--space-2); }
+.notice .rs-btn { background: var(--navy); color: var(--on-navy); }
+.choice[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--yellow); }
 @media (max-width: 370px) { .brand { font-size: 18px; } .brand small { display: none; } .top-actions .rs-btn-sm { padding-inline: 8px; } }
 @media (prefers-reduced-motion: reduce) { .rs-btn, .mark { transition: none; } }
 </style>
@@ -274,8 +299,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     </div>
     <div class="stack" id="playerList"></div>
     <button class="rs-btn rs-btn-primary rs-btn-block" id="recordBtn" type="button">Record round 1</button>
-    <div class="btn-row">
-      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="undoBtn" type="button">Undo last round</button>
+    <div class="btn-row btn-row-3">
+      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="historyBtn" type="button">History</button>
+      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="undoBtn" type="button">Undo round</button>
       <button class="rs-btn rs-btn-ghost rs-btn-sm" id="newGameBtn" type="button">New game</button>
     </div>
     <div class="stripe-foot" aria-hidden="true"><div class="rs-stripes"><i class="rs-s rs-s-red"></i><i class="rs-s rs-s-blue"></i><i class="rs-s rs-s-green"></i><i class="rs-s rs-s-yellow"></i></div></div>
@@ -316,7 +342,25 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
       <button class="rs-btn rs-btn-primary" id="rematchBtn" type="button">Rematch</button>
       <button class="rs-btn rs-btn-secondary" id="freshBtn" type="button">New players</button>
     </div>
-    <button class="rs-btn rs-btn-ghost rs-btn-sm rs-btn-block" id="winUndoBtn" type="button">Undo last round</button>
+    <div class="btn-row">
+      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="winHistoryBtn" type="button">History</button>
+      <button class="rs-btn rs-btn-ghost rs-btn-sm" id="winUndoBtn" type="button">Undo last round</button>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="screen" id="scrHistory" hidden>
+    <div class="bar">
+      <h1 class="headline">History</h1>
+      <button class="rs-btn rs-btn-secondary rs-btn-sm" id="historyClose" type="button">Back</button>
+    </div>
+    <p class="muted" id="historyLead">Tap any box to correct it. Everyone's phases update straight away.</p>
+    <div class="notice" id="overrun" hidden>
+      <span id="overrunText"></span>
+      <button class="rs-btn rs-btn-sm" id="trimBtn" type="button">Remove the extra rounds</button>
+    </div>
+    <div id="historyTable"></div>
+    <p class="legend" id="historyLegend"><span><span class="pip suit-red">3<i>✓</i></span> made it</span><span><span class="pip pip-miss">3</span> missed</span><span><span class="dl" style="position:static">D</span> dealt</span></p>
   </section>
 
   <!-- RULES & FAQ -->
@@ -337,6 +381,19 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   </section>
 
   <p class="ver" id="ver"></p>
+</div>
+
+<!-- Correct-a-round sheet -->
+<div class="scrim" id="editSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <h2 class="title" id="editTitle"></h2>
+    <p class="lead" id="editText"></p>
+    <div class="btn-row">
+      <button class="rs-btn rs-btn-ghost choice" id="editMissed" type="button">Missed it</button>
+      <button class="rs-btn rs-btn-primary choice" id="editMade" type="button">Made it</button>
+    </div>
+    <button class="rs-btn rs-btn-ghost rs-btn-sm rs-btn-block" id="editCancel" type="button">Cancel</button>
+  </div>
 </div>
 
 <!-- Confirm sheet (built into the page; no browser dialogs) -->
@@ -377,7 +434,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '4';
+  const APP_VERSION = '5';
   const SAVE_KEY = 'phase10-tracker';
   const SAVE_VERSION = 1;
   const MIN_PLAYERS = 2, MAX_PLAYERS = 6;
@@ -413,6 +470,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
   let state = load() || freshState();
   let rulesOpen = false;
+  let historyOpen = false;
+  let editing = null;       // { round, id } being corrected on the History screen
   let marked = new Set();   // players ticked on the Record hand screen
   let picking = false;      // showing the "pick one winner" list
 
@@ -428,6 +487,30 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     if (!g.hands.length) return [];
     return g.players.filter((p) => completed(g, p.id) >= g.phases.length);
   }
+  // Phases completed by a player before round index i (0-based).
+  function completedBefore(g, id, i) {
+    let n = 0;
+    for (let k = 0; k < i; k++) if (g.hands[k].made.indexOf(id) >= 0) n++;
+    return Math.min(g.phases.length, n);
+  }
+  // The phase a player was attempting in round i, or null if they had already finished.
+  function attempted(g, id, i) { const c = completedBefore(g, id, i); return c < g.phases.length ? g.phases[c] : null; }
+  // The round (0-based) in which someone first finished the last phase, or -1. Rounds after it are extras left by a correction.
+  function endIndex(g) {
+    for (let i = 0; i < g.hands.length; i++) {
+      if (g.players.some((p) => completedBefore(g, p.id, i + 1) >= g.phases.length)) return i;
+    }
+    return -1;
+  }
+  // After a correction or trim: drop a picked winner who no longer finished, and show the winner or standings to match.
+  function settle() {
+    const g = state.game; if (!g) return;
+    const f = finishers(g);
+    if (g.winner && g.winner !== 'shared' && !f.some((p) => p.id === g.winner)) g.winner = null;
+    if (f.length < 2) picking = false;
+    if (f.length) state.screen = 'winner';
+    else if (state.screen === 'winner') state.screen = 'board';
+  }
   function dealerFor(g, handIndex) { return g.players[handIndex % g.players.length]; }
   function ranked(g) {
     return g.players.map((p, seat) => ({ ...p, seat, done: completed(g, p.id) }))
@@ -435,15 +518,17 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   }
 
   /* ---------- Rendering ---------- */
-  const SCREENS = { setup: 'scrSetup', board: 'scrBoard', record: 'scrRecord', winner: 'scrWinner', rules: 'scrRules' };
+  const SCREENS = { setup: 'scrSetup', board: 'scrBoard', record: 'scrRecord', winner: 'scrWinner', history: 'scrHistory', rules: 'scrRules' };
   function render(scroll) {
-    const view = rulesOpen ? 'rules' : state.screen;
+    if (historyOpen && !state.game) historyOpen = false;
+    const view = rulesOpen ? 'rules' : historyOpen ? 'history' : state.screen;
     Object.keys(SCREENS).forEach((k) => { $(SCREENS[k]).hidden = k !== view; });
     $('rulesBtn').hidden = view === 'rules';
     if (view === 'setup') renderSetup();
     if (view === 'board') renderBoard();
     if (view === 'record') renderRecord();
     if (view === 'winner') renderWinner();
+    if (view === 'history') renderHistory();
     if (scroll) window.scrollTo(0, 0);
   }
   const go = () => render(true);
@@ -480,6 +565,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     }).join('');
     $('recordBtn').textContent = 'Record round ' + n;
     $('undoBtn').disabled = !g.hands.length;
+    $('historyBtn').disabled = !g.hands.length;
   }
 
   function renderRecord() {
@@ -543,7 +629,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   $('startBtn').addEventListener('click', () => { if (state.draft.length >= MIN_PLAYERS) startGame(state.draft.slice()); });
   function startGame(names) {
     state.game = { id: uid(), startedAt: Date.now(), phases: STANDARD.slice(), players: names.map((name) => ({ id: uid(), name })), hands: [], winner: null };
-    state.screen = 'board'; rulesOpen = false; picking = false;
+    state.screen = 'board'; rulesOpen = false; historyOpen = false; picking = false;
     save(); go();
   }
 
@@ -573,13 +659,91 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     confirmThen('Nobody made their phase?', 'Usually whoever went out has laid down their phase. Save this round with everyone staying on the same phase?', 'Save round', 'Go back', commitHand);
   });
 
+  /* ---------- History and corrections (Milestone 3) ---------- */
+  const pip = (n, made) => n === null ? '<span class="pip pip-none">–</span>'
+    : made ? '<span class="pip suit-' + suit(n) + '">' + n + '<i>✓</i></span>' : '<span class="pip pip-miss">' + n + '</span>';
+  function renderHistory() {
+    const g = state.game;
+    const has = g.hands.length > 0;
+    $('historyLead').textContent = has ? 'Tap any box to correct it. Everyone’s phases update straight away.' : 'No rounds recorded yet.';
+    $('historyLegend').hidden = !has;
+    const end = endIndex(g), extra = end >= 0 && end < g.hands.length - 1;
+    $('overrun').hidden = !extra;
+    if (extra) {
+      const who = g.players.filter((p) => completedBefore(g, p.id, end + 1) >= g.phases.length).map((p) => p.name);
+      const from = end + 2, to = g.hands.length;
+      $('overrunText').textContent = who.join(' and ') + ' finished Phase ' + g.phases[g.phases.length - 1] + ' in round ' + (end + 1) +
+        ', so the game ended there. Round' + (from === to ? ' ' + from + ' comes' : 's ' + from + '–' + to + ' come') + ' after the end.';
+      $('trimBtn').textContent = from === to ? 'Remove round ' + from : 'Remove rounds ' + from + '–' + to;
+    }
+    if (!has) { $('historyTable').innerHTML = ''; return; }
+    let h = '<div class="hist-wrap"><table class="hist"><thead><tr><th scope="col" class="rcol">Rd</th>';
+    g.players.forEach((p) => { h += '<th scope="col" title="' + esc(p.name) + '">' + esc(p.name) + '</th>'; });
+    h += '</tr></thead><tbody>';
+    g.hands.forEach((hand, i) => {
+      const dealer = dealerFor(g, i).id;
+      h += '<tr><th scope="row" class="rcol">' + (i + 1) + '</th>' + g.players.map((p) => {
+        const n = attempted(g, p.id, i), made = n !== null && hand.made.indexOf(p.id) >= 0;
+        const dl = p.id === dealer ? '<span class="dl" aria-hidden="true">D</span>' : '';
+        const said = esc(p.name) + ', round ' + (i + 1) + (p.id === dealer ? ', dealer' : '') + ': ' +
+          (n === null ? 'already finished' : (made ? 'made phase ' : 'missed phase ') + n + '. Tap to correct.');
+        return '<td><button type="button" class="hcell" data-r="' + i + '" data-p="' + p.id + '" aria-label="' + said + '"' + (n === null ? ' disabled' : '') + '>' +
+          '<span class="pipwrap">' + pip(n, made) + dl + '</span></button></td>';
+      }).join('') + '</tr>';
+    });
+    h += '</tbody><tfoot><tr><th scope="row" class="rcol">Now</th>' + g.players.map((p) => {
+      const n = currentPhase(g, p.id);
+      return '<td><span class="hcell" aria-label="' + esc(p.name) + (n === null ? ' has finished' : ' is on phase ' + n) + '">' +
+        (n === null ? '<span class="pip pip-done">✓</span>' : '<span class="pip suit-' + suit(n) + '">' + n + '</span>') + '</span></td>';
+    }).join('') + '</tr></tfoot></table></div>';
+    $('historyTable').innerHTML = h;
+  }
+  $('historyTable').addEventListener('click', (ev) => {
+    const b = ev.target.closest('button[data-r]'); if (!b || b.disabled) return;
+    const g = state.game, i = +b.dataset.r, id = b.dataset.p;
+    const p = g.players.find((x) => x.id === id), n = attempted(g, id, i);
+    if (n === null) return;
+    const made = g.hands[i].made.indexOf(id) >= 0;
+    editing = { round: i, id };
+    $('editTitle').textContent = 'Round ' + (i + 1) + ': ' + p.name;
+    $('editText').textContent = p.name + ' was on Phase ' + n + ' (' + PHASES[n] + '). Did they lay it down?';
+    $('editMade').setAttribute('aria-pressed', String(made));
+    $('editMissed').setAttribute('aria-pressed', String(!made));
+    $('editSheet').hidden = false;
+  });
+  function applyEdit(made) {
+    if (!editing) return;
+    const g = state.game, list = g.hands[editing.round].made, at = list.indexOf(editing.id);
+    if (made && at < 0) list.push(editing.id);
+    if (!made && at >= 0) list.splice(at, 1);
+    editing = null; $('editSheet').hidden = true;
+    settle(); save(); render(false);
+  }
+  const closeEdit = () => { editing = null; $('editSheet').hidden = true; };
+  $('editMade').addEventListener('click', () => applyEdit(true));
+  $('editMissed').addEventListener('click', () => applyEdit(false));
+  $('editCancel').addEventListener('click', closeEdit);
+  $('editSheet').addEventListener('click', (ev) => { if (ev.target === $('editSheet')) closeEdit(); });
+  $('trimBtn').addEventListener('click', () => {
+    const g = state.game, end = endIndex(g); if (end < 0) return;
+    const from = end + 2, to = g.hands.length;
+    confirmThen(from === to ? 'Remove round ' + from + '?' : 'Remove rounds ' + from + '–' + to + '?',
+      'The game ended in round ' + (end + 1) + ', so anything recorded after it is taken off.', 'Remove', 'Cancel', () => {
+        g.hands.length = end + 1; settle(); save(); render(false);
+      });
+  });
+  const openHistory = () => { historyOpen = true; go(); };
+  $('historyBtn').addEventListener('click', openHistory);
+  $('winHistoryBtn').addEventListener('click', openHistory);
+  $('historyClose').addEventListener('click', () => { historyOpen = false; go(); });
+
   /* ---------- Undo ---------- */
   function undoLastHand() {
     const g = state.game; if (!g || !g.hands.length) return;
     const n = g.hands.length;
     confirmThen('Undo round ' + n + '?', 'Everyone goes back to the phase they were on before round ' + n + ' was saved.', 'Undo round', 'Cancel', () => {
       g.hands.pop(); g.winner = null; picking = false;
-      state.screen = 'board'; save(); go();
+      state.screen = 'board'; settle(); save(); go();
     });
   }
   $('undoBtn').addEventListener('click', undoLastHand);
