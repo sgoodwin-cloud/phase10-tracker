@@ -333,7 +333,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
     <div class="prose" id="panePhases"></div>
     <div class="prose" id="paneRules" hidden></div>
     <div class="prose" id="paneFaq" hidden></div>
-    <p class="source">Rules summarised in our own words from the official Phase 10 rules, as published at <a href="https://phase10rules.com/" target="_blank" rel="noopener">phase10rules.com</a>. This app is an unofficial tracker and plays our house rule: no points.</p>
+    <p class="source">Phases as printed on the reference card in the current Mattel deck. Rules summarised in our own words from the official Phase 10 rules, as published at <a href="https://phase10rules.com/" target="_blank" rel="noopener">phase10rules.com</a>. This app is an unofficial tracker and plays our house rule: no points.</p>
   </section>
 
   <p class="ver" id="ver"></p>
@@ -377,15 +377,15 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '2';
+  const APP_VERSION = '3';
   const SAVE_KEY = 'phase10-tracker';
   const SAVE_VERSION = 1;
   const MIN_PLAYERS = 2, MAX_PLAYERS = 6;
 
-  // The ten phases. Games store which phase numbers they play, so variants (Milestone 4) are just a different list.
+  // The ten phases, as printed on the reference card in Stuart's own (current Mattel) deck. Games store which phase numbers they play, so variants (Milestone 4) are just a different list.
   const PHASES = {
     1: '2 sets of 3', 2: '1 set of 3 + 1 run of 4', 3: '1 set of 4 + 1 run of 4', 4: '1 run of 7', 5: '1 run of 8',
-    6: '1 run of 9', 7: '2 sets of 4', 8: '7 cards of 1 colour', 9: '1 set of 5 + 1 set of 2', 10: '1 set of 4 + 1 set of 3'
+    6: '1 run of 9', 7: '2 sets of 4', 8: '7 cards of 1 colour', 9: '1 set of 5 + 1 set of 2', 10: '1 set of 5 + 1 set of 3'
   };
   const STANDARD = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const suit = (n) => n <= 3 ? 'red' : n <= 6 ? 'blue' : n <= 9 ? 'green' : 'yellow';
