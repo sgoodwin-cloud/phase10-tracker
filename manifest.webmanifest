@@ -1,0 +1,16 @@
+{
+  "name": "Phase 10 Tracker",
+  "short_name": "Phase 10",
+  "description": "Tracks who is on which phase in a game of Phase 10. Works offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#02378f",
+  "theme_color": "#02378f",
+  "lang": "en-GB",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
