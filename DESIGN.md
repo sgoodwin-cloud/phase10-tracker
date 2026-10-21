@@ -1,6 +1,6 @@
 # Phase 10 Tracker — design notes
 
-Last updated: 19 Oct 2026 (v5)
+Last updated: 21 Oct 2026 (v6)
 
 The full design doc (house rules, screens, milestones, lessons) is Stuart's Claude doc "Phase 10 Tracker — Design Doc":
 https://claude.ai/code/artifact/1d0d6d11-134c-4fba-97fd-f5ec57a9b50d
@@ -106,3 +106,4 @@ Live at: https://sgoodwin-cloud.github.io/phase10-tracker/
 | 19 Oct 2026 | Even/odd-phases-only variants aren't in Stuart's leaflet (it lists 10 rounds where everyone advances, and play to a set number of phases); Milestone 4 variants to be confirmed |
 | 19 Oct 2026 | Milestone 3 (v5): History grid with tap-to-correct, dealer per round, extra-round tidy-up after corrections. Standings buttons become History / Undo round / New game. Save format unchanged (`SAVE_VERSION` 1). On test branch `m3` with a preview link; merge after play-test |
 | 19 Oct 2026 | Milestone 3 approved after preview testing; `m3` merged to `main` |
+| 21 Oct 2026 | v6: update fixes from Pocket Factory. The update banner is now a bar at the top of the page (it was a floating button near the home bar, which iPhone could make untappable), and updates fetch each file at `?v=<VERSION>` and check `APP_VERSION` before installing, so GitHub Pages' CDN can't hand an update stale files |
