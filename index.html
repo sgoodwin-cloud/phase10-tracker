@@ -198,7 +198,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .steps b { font-weight: 700; }
 
 /* Update banner */
-#update { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); white-space: nowrap; box-shadow: var(--shadow-lift); }
+#update { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; display: block; width: 100%; height: 48px; box-sizing: border-box;
+  margin: 0; border-radius: 0; white-space: nowrap; touch-action: manipulation; }
+/* while the bar shows, the sticky header sits below it */
+body.has-update .top { top: calc(env(safe-area-inset-top, 0px) + 48px); }
 /* Phone layout (v2): sized so six players, Record hand and Undo fit on an iPhone 13 (390 × 844) without scrolling. */
 .wrap { padding-bottom: var(--space-4); }
 .screen { gap: var(--space-3); }
@@ -266,6 +269,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 </style>
 </head>
 <body>
+<!-- Update bar: in the page flow at the top (sticky), never floating, so nothing overlaps it on iPhone -->
+<button class="rs-btn rs-btn-primary" id="update" type="button" hidden>Update ready · tap to update</button>
 
 <div class="wrap">
   <header class="top">
@@ -434,7 +439,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '5';
+  const APP_VERSION = '6';
   const SAVE_KEY = 'phase10-tracker';
   const SAVE_VERSION = 1;
   const MIN_PLAYERS = 2, MAX_PLAYERS = 6;
@@ -899,7 +904,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   })();
 })();
 </script>
-<button class="rs-btn rs-btn-primary" id="update" type="button" hidden>Update ready · tap to reload</button>
 
 <script>
 // Offline support + update banner (pattern proven in Swipe Snake v7+ and Flip 7)
@@ -915,6 +919,7 @@ if ('serviceWorker' in navigator) {
       // Tap → tell the waiting worker to take over → reload only once it has actually switched on.
       const show = w => {
         btn.hidden = false;
+        document.body.classList.add('has-update');
         btn.onclick = () => {
           const nw = reg.waiting || w;
           btn.textContent = 'Updating…'; btn.disabled = true;
